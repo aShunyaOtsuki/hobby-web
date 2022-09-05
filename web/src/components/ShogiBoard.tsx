@@ -7,9 +7,10 @@ export const ShogiBoard = () => {
       <div className="ShogiBoard">
         {[1, 2, 3, 4, 5].flatMap((i) => {
           return [1, 2, 3, 4, 5].map((j) => {
+            const komaPlaceIndex = `${6 - j}${i}`;
             if (i <= 2) {
               return (
-                <div className="KomaPlace KomaGote">
+                <div key={komaPlaceIndex} className="KomaPlace KomaGote">
                   {`${6 - j}${i}`}
                   <br />
                   {initialShogiPlaces[i - 1][j - 1]}
@@ -17,7 +18,7 @@ export const ShogiBoard = () => {
               );
             }
             return (
-              <div className="KomaPlace KomaSente">
+              <div key={komaPlaceIndex} className="KomaPlace KomaSente">
                 {`${6 - j}${i}`}
                 <br />
                 {initialShogiPlaces[i - 1][j - 1]}
