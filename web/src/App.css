@@ -47,3 +47,10 @@
 .KomaPlace {
   outline: solid 1px;
 }
+
+.KomaSente {
+  transform: rotateX(0deg);
+}
+.KomaGote {
+  transform: rotateX(180deg);
+}
