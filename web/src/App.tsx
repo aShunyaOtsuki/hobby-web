@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 const App = () => {
   return (
@@ -10,6 +10,7 @@ const App = () => {
         <Link to="game_app">game_app</Link>
         <Link to="memo">memo</Link>
       </nav>
+      <Outlet />
     </div>
   );
 };
