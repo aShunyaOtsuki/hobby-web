@@ -36,3 +36,21 @@
     transform: rotate(360deg);
   }
 }
+
+.ShogiBoard {
+  display: grid;
+  grid-template-columns: repeat(5, 100px);
+  grid-template-rows: repeat(5, 100px);
+  justify-content: center;
+}
+
+.KomaPlace {
+  outline: solid 1px;
+}
+
+.KomaSente {
+  transform: rotateX(0deg);
+}
+.KomaGote {
+  transform: rotateX(180deg);
+}
