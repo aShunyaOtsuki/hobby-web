@@ -121,9 +121,11 @@ export class Gote extends Player {
 export class Board {
   sente: Player;
   gote: Player;
+  currentPlace: Place | null;
   constructor() {
     this.sente = new Sente();
     this.gote = new Gote();
+    this.currentPlace = null;
   }
   createBoard() {
     return [1, 2, 3, 4, 5].flatMap((i) => {
@@ -131,7 +133,28 @@ export class Board {
         const komaPlace: Place = [6 - j, i] as any;
         const komaPlaceKey = komaPlace.toString();
         return (
-          <div key={komaPlaceKey} className="KomaPlace">
+          <div
+            key={komaPlaceKey}
+            className="KomaPlace"
+            onClick={() => {
+              if (this.currentPlace != null) {
+                const koma =
+                  this.sente.komas.find((koma) =>
+                    samePlace(koma.place, komaPlace)
+                  ) ??
+                  this.gote.komas.find((koma) =>
+                    samePlace(koma.place, komaPlace)
+                  );
+                if (koma == null) {
+                  this.sente.move(this.currentPlace, komaPlace);
+                }
+                this.currentPlace = null;
+              } else {
+                this.currentPlace = komaPlace;
+                console.log(this.currentPlace);
+              }
+            }}
+          >
             {`${6 - j}${i}`}
             <br />
             <p className="KomaSente">
