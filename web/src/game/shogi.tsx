@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const komaType = ["歩", "銀", "金", "角", "飛", "玉"] as const;
 type KomaType = typeof komaType[number];
 // const placeRange = [1, 2, 3, 4, 5] as const;
@@ -50,7 +52,7 @@ abstract class Player {
     if (koma == null) throw new Error();
 
     this.komas = this.komas
-      .filter((koma) => samePlace(koma.place, currentPlace))
+      .filter((koma) => !samePlace(koma.place, currentPlace))
       .concat({ komaType: koma.komaType, place: nextPlace });
   }
 }
@@ -118,61 +120,57 @@ export class Gote extends Player {
   }
 }
 
-export class Board {
-  sente: Player;
-  gote: Player;
-  currentPlace: Place | null;
-  constructor() {
-    this.sente = new Sente();
-    this.gote = new Gote();
-    this.currentPlace = null;
-  }
-  createBoard() {
-    return [1, 2, 3, 4, 5].flatMap((i) => {
-      return [1, 2, 3, 4, 5].map((j) => {
-        const komaPlace: Place = [6 - j, i] as any;
-        const komaPlaceKey = komaPlace.toString();
-        return (
-          <div
-            key={komaPlaceKey}
-            className="KomaPlace"
-            onClick={() => {
-              if (this.currentPlace != null) {
-                const koma =
-                  this.sente.komas.find((koma) =>
-                    samePlace(koma.place, komaPlace)
-                  ) ??
-                  this.gote.komas.find((koma) =>
-                    samePlace(koma.place, komaPlace)
-                  );
-                if (koma == null) {
-                  this.sente.move(this.currentPlace, komaPlace);
+export const Board = () => {
+  const [sente, setSente] = useState(new Sente());
+  const [gote, setGote] = useState(new Gote());
+  const [currentPlace, setCurrentPlace] = useState<Place | null>(null);
+
+  return (
+    <div className="ShogiBoard">
+      {[1, 2, 3, 4, 5].flatMap((i) => {
+        return [1, 2, 3, 4, 5].map((j) => {
+          const komaPlace: Place = [6 - j, i] as any;
+          const komaPlaceKey = komaPlace.toString();
+          return (
+            <div
+              key={komaPlaceKey}
+              className="KomaPlace"
+              onClick={() => {
+                if (currentPlace != null) {
+                  const koma =
+                    sente.komas.find((koma) =>
+                      samePlace(koma.place, komaPlace)
+                    ) ??
+                    gote.komas.find((koma) => samePlace(koma.place, komaPlace));
+                  if (koma == null) {
+                    sente.move(currentPlace, komaPlace);
+                    setSente(sente);
+                  }
+                  setCurrentPlace(null);
+                } else {
+                  setCurrentPlace(komaPlace);
+                  console.log(currentPlace);
                 }
-                this.currentPlace = null;
-              } else {
-                this.currentPlace = komaPlace;
-                console.log(this.currentPlace);
-              }
-            }}
-          >
-            {`${6 - j}${i}`}
-            <br />
-            <p className="KomaSente">
-              {
-                this.sente.komas.find((koma) =>
-                  samePlace(koma.place, komaPlace)
-                )?.komaType
-              }
-            </p>
-            <p className="KomaGote">
-              {
-                this.gote.komas.find((koma) => samePlace(koma.place, komaPlace))
-                  ?.komaType
-              }
-            </p>
-          </div>
-        );
-      });
-    });
-  }
-}
+              }}
+            >
+              {`${6 - j}${i}`}
+              <br />
+              <p className="KomaSente">
+                {
+                  sente.komas.find((koma) => samePlace(koma.place, komaPlace))
+                    ?.komaType
+                }
+              </p>
+              <p className="KomaGote">
+                {
+                  gote.komas.find((koma) => samePlace(koma.place, komaPlace))
+                    ?.komaType
+                }
+              </p>
+            </div>
+          );
+        });
+      })}
+    </div>
+  );
+};
