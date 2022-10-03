@@ -137,19 +137,24 @@ export const Board = () => {
               className="KomaPlace"
               onClick={() => {
                 if (currentPlace != null) {
-                  const koma =
-                    sente.komas.find((koma) =>
-                      samePlace(koma.place, komaPlace)
-                    ) ??
-                    gote.komas.find((koma) => samePlace(koma.place, komaPlace));
-                  if (koma == null) {
+                  const senteKoma = sente.komas.find((koma) =>
+                    samePlace(koma.place, currentPlace)
+                  );
+                  const goteKoma = gote.komas.find((koma) =>
+                    samePlace(koma.place, currentPlace)
+                  );
+                  console.log(senteKoma, goteKoma);
+                  if (senteKoma != null) {
                     sente.move(currentPlace, komaPlace);
                     setSente(sente);
+                  }
+                  if (goteKoma != null) {
+                    gote.move(currentPlace, komaPlace);
+                    setGote(sente);
                   }
                   setCurrentPlace(null);
                 } else {
                   setCurrentPlace(komaPlace);
-                  console.log(currentPlace);
                 }
               }}
             >
