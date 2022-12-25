@@ -2,8 +2,6 @@ import { useState } from "react";
 
 const komaType = ["歩", "銀", "金", "角", "飛", "玉"] as const;
 type KomaType = typeof komaType[number];
-// const placeRange = [1, 2, 3, 4, 5] as const;
-// type PlaceRange = typeof placeRange[number];
 const places = [
   [0, 0], // 持ち駒の場所
   [1, 1],
@@ -120,9 +118,12 @@ export class Gote extends Player {
   }
 }
 
+type Teban = "sente" | "gote";
+
 export const Board = () => {
   const [sente, setSente] = useState(new Sente());
   const [gote, setGote] = useState(new Gote());
+  const [teban, setTeban] = useState<Teban>("sente");
   const [currentPlace, setCurrentPlace] = useState<Place | null>(null);
 
   return (
@@ -136,25 +137,36 @@ export const Board = () => {
               key={komaPlaceKey}
               className="KomaPlace"
               onClick={() => {
+                // 駒が選択されていた場合
                 if (currentPlace != null) {
-                  const senteKoma = sente.komas.find((koma) =>
-                    samePlace(koma.place, currentPlace)
-                  );
-                  const goteKoma = gote.komas.find((koma) =>
-                    samePlace(koma.place, currentPlace)
-                  );
-                  console.log(senteKoma, goteKoma);
-                  if (senteKoma != null) {
+                  if (teban === "sente") {
                     sente.move(currentPlace, komaPlace);
                     setSente(sente);
-                  }
-                  if (goteKoma != null) {
+                    setCurrentPlace(null);
+                    setTeban("gote");
+                  } /* teban === "gote" */ else {
                     gote.move(currentPlace, komaPlace);
-                    setGote(sente);
+                    setGote(gote);
+                    setCurrentPlace(null);
+                    setTeban("sente");
                   }
-                  setCurrentPlace(null);
-                } else {
-                  setCurrentPlace(komaPlace);
+                  return;
+                }
+                // 駒が未選択の場合
+                if (teban === "sente") {
+                  const senteKoma = sente.komas.find((koma) =>
+                    samePlace(koma.place, komaPlace)
+                  );
+                  if (senteKoma != null) {
+                    setCurrentPlace(komaPlace);
+                  }
+                } /* teban === "gote" */ else {
+                  const goteKoma = gote.komas.find((koma) =>
+                    samePlace(koma.place, komaPlace)
+                  );
+                  if (goteKoma != null) {
+                    setCurrentPlace(komaPlace);
+                  }
                 }
               }}
             >
@@ -176,6 +188,7 @@ export const Board = () => {
           );
         });
       })}
+      <p>teban: {teban}</p>
     </div>
   );
 };
