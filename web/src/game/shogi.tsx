@@ -53,6 +53,10 @@ abstract class Player {
       .filter((koma) => !samePlace(koma.place, currentPlace))
       .concat({ komaType: koma.komaType, place: nextPlace });
   }
+
+  findKoma(komaPlace: Place) {
+    return this.komas.find((koma) => samePlace(koma.place, komaPlace));
+  }
 }
 
 const SENTE_INITIAL_KOMA: Koma[] = [
@@ -149,9 +153,7 @@ export const Board = () => {
                   return;
                 }
                 // 駒が未選択の場合
-                const playerKoma = player.komas.find((koma) =>
-                  samePlace(koma.place, komaPlace)
-                );
+                const playerKoma = player.findKoma(komaPlace);
                 if (playerKoma != null) {
                   setCurrentPlace(komaPlace);
                 }
@@ -159,18 +161,8 @@ export const Board = () => {
             >
               {`${6 - j}${i}`}
               <br />
-              <p className="KomaSente">
-                {
-                  sente.komas.find((koma) => samePlace(koma.place, komaPlace))
-                    ?.komaType
-                }
-              </p>
-              <p className="KomaGote">
-                {
-                  gote.komas.find((koma) => samePlace(koma.place, komaPlace))
-                    ?.komaType
-                }
-              </p>
+              <p className="KomaSente">{sente.findKoma(komaPlace)?.komaType}</p>
+              <p className="KomaGote">{gote.findKoma(komaPlace)?.komaType}</p>
             </div>
           );
         });
