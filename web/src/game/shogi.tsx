@@ -130,6 +130,27 @@ export const Board = () => {
   const [teban, setTeban] = useState<Teban>("sente");
   const [currentPlace, setCurrentPlace] = useState<Place | null>(null);
 
+  const handleClick = (komaPlace: Place) => {
+    return () => {
+      const player = teban === "sente" ? sente : gote;
+      const setPlayer = teban === "sente" ? setSente : setGote;
+      const nextTeban: Teban = teban === "sente" ? "gote" : "sente";
+      // 駒が選択されていた場合
+      if (currentPlace != null) {
+        player.move(currentPlace, komaPlace);
+        setPlayer(player);
+        setCurrentPlace(null);
+        setTeban(nextTeban);
+        return;
+      }
+      // 駒が未選択の場合
+      const playerKoma = player.findKoma(komaPlace);
+      if (playerKoma != null) {
+        setCurrentPlace(komaPlace);
+      }
+    };
+  };
+
   return (
     <div className="ShogiBoard">
       {[1, 2, 3, 4, 5].flatMap((i) => {
@@ -140,24 +161,7 @@ export const Board = () => {
             <div
               key={komaPlaceKey}
               className="KomaPlace"
-              onClick={() => {
-                const player = teban === "sente" ? sente : gote;
-                const setPlayer = teban === "sente" ? setSente : setGote;
-                const nextTeban: Teban = teban === "sente" ? "gote" : "sente";
-                // 駒が選択されていた場合
-                if (currentPlace != null) {
-                  player.move(currentPlace, komaPlace);
-                  setPlayer(player);
-                  setCurrentPlace(null);
-                  setTeban(nextTeban);
-                  return;
-                }
-                // 駒が未選択の場合
-                const playerKoma = player.findKoma(komaPlace);
-                if (playerKoma != null) {
-                  setCurrentPlace(komaPlace);
-                }
-              }}
+              onClick={handleClick(komaPlace)}
             >
               {`${6 - j}${i}`}
               <br />
