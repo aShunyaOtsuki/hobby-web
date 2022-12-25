@@ -150,7 +150,7 @@ export const Board = () => {
                   }
                   if (goteKoma != null) {
                     gote.move(currentPlace, komaPlace);
-                    setGote(sente);
+                    setGote(gote);
                   }
                   setCurrentPlace(null);
                 } else {
