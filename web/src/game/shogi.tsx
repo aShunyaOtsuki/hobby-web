@@ -151,26 +151,30 @@ export const Board = () => {
     };
   };
 
+  const view = () => {
+    return [1, 2, 3, 4, 5].flatMap((i) => {
+      return [1, 2, 3, 4, 5].map((j) => {
+        const komaPlace: Place = [6 - j, i] as any;
+        const komaPlaceKey = komaPlace.toString();
+        return (
+          <div
+            key={komaPlaceKey}
+            className="KomaPlace"
+            onClick={handleClick(komaPlace)}
+          >
+            {`${6 - j}${i}`}
+            <br />
+            <p className="KomaSente">{sente.findKoma(komaPlace)?.komaType}</p>
+            <p className="KomaGote">{gote.findKoma(komaPlace)?.komaType}</p>
+          </div>
+        );
+      });
+    });
+  };
+
   return (
     <div className="ShogiBoard">
-      {[1, 2, 3, 4, 5].flatMap((i) => {
-        return [1, 2, 3, 4, 5].map((j) => {
-          const komaPlace: Place = [6 - j, i] as any;
-          const komaPlaceKey = komaPlace.toString();
-          return (
-            <div
-              key={komaPlaceKey}
-              className="KomaPlace"
-              onClick={handleClick(komaPlace)}
-            >
-              {`${6 - j}${i}`}
-              <br />
-              <p className="KomaSente">{sente.findKoma(komaPlace)?.komaType}</p>
-              <p className="KomaGote">{gote.findKoma(komaPlace)?.komaType}</p>
-            </div>
-          );
-        });
-      })}
+      {view()}
       <p>teban: {teban}</p>
     </div>
   );
