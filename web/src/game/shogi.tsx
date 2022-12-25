@@ -157,7 +157,21 @@ export const Board = () => {
                   }
                   setCurrentPlace(null);
                 } else {
-                  setCurrentPlace(komaPlace);
+                  if (teban === "sente") {
+                    const senteKoma = sente.komas.find((koma) =>
+                      samePlace(koma.place, komaPlace)
+                    );
+                    if (senteKoma != null) {
+                      setCurrentPlace(komaPlace);
+                    }
+                  } else {
+                    const goteKoma = gote.komas.find((koma) =>
+                      samePlace(koma.place, komaPlace)
+                    );
+                    if (goteKoma != null) {
+                      setCurrentPlace(komaPlace);
+                    }
+                  }
                 }
               }}
             >
