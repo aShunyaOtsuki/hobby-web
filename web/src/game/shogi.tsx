@@ -132,7 +132,7 @@ export const Board = () => {
 
   const handleClick = (komaPlace: Place) => {
     return () => {
-      const player = teban === "sente" ? sente : gote;
+      const player: Player = teban === "sente" ? sente : gote;
       const setPlayer = teban === "sente" ? setSente : setGote;
       const nextTeban: Teban = teban === "sente" ? "gote" : "sente";
       // 駒が選択されていた場合
