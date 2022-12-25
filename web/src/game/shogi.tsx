@@ -139,21 +139,17 @@ export const Board = () => {
               onClick={() => {
                 // 駒が選択されていた場合
                 if (currentPlace != null) {
-                  const senteKoma = sente.komas.find((koma) =>
-                    samePlace(koma.place, currentPlace)
-                  );
-                  const goteKoma = gote.komas.find((koma) =>
-                    samePlace(koma.place, currentPlace)
-                  );
-                  if (senteKoma != null) {
+                  if (teban === "sente") {
                     sente.move(currentPlace, komaPlace);
                     setSente(sente);
-                  }
-                  if (goteKoma != null) {
+                    setCurrentPlace(null);
+                    setTeban("gote");
+                  } /* teban === "gote" */ else {
                     gote.move(currentPlace, komaPlace);
                     setGote(gote);
+                    setCurrentPlace(null);
+                    setTeban("sente");
                   }
-                  setCurrentPlace(null);
                   return;
                 }
                 // 駒が未選択の場合
