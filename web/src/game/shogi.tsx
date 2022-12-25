@@ -139,6 +139,7 @@ export const Board = () => {
               key={komaPlaceKey}
               className="KomaPlace"
               onClick={() => {
+                // 駒が選択されていた場合
                 if (currentPlace != null) {
                   const senteKoma = sente.komas.find((koma) =>
                     samePlace(koma.place, currentPlace)
@@ -156,21 +157,22 @@ export const Board = () => {
                     setGote(gote);
                   }
                   setCurrentPlace(null);
-                } else {
-                  if (teban === "sente") {
-                    const senteKoma = sente.komas.find((koma) =>
-                      samePlace(koma.place, komaPlace)
-                    );
-                    if (senteKoma != null) {
-                      setCurrentPlace(komaPlace);
-                    }
-                  } else {
-                    const goteKoma = gote.komas.find((koma) =>
-                      samePlace(koma.place, komaPlace)
-                    );
-                    if (goteKoma != null) {
-                      setCurrentPlace(komaPlace);
-                    }
+                  return;
+                }
+                // 駒が未選択の場合
+                if (teban === "sente") {
+                  const senteKoma = sente.komas.find((koma) =>
+                    samePlace(koma.place, komaPlace)
+                  );
+                  if (senteKoma != null) {
+                    setCurrentPlace(komaPlace);
+                  }
+                } /* teban === "gote" */ else {
+                  const goteKoma = gote.komas.find((koma) =>
+                    samePlace(koma.place, komaPlace)
+                  );
+                  if (goteKoma != null) {
+                    setCurrentPlace(komaPlace);
                   }
                 }
               }}
