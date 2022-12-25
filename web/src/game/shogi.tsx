@@ -137,36 +137,23 @@ export const Board = () => {
               key={komaPlaceKey}
               className="KomaPlace"
               onClick={() => {
+                const player = teban === "sente" ? sente : gote;
+                const setPlayer = teban === "sente" ? setSente : setGote;
+                const nextTeban: Teban = teban === "sente" ? "gote" : "sente";
                 // 駒が選択されていた場合
                 if (currentPlace != null) {
-                  if (teban === "sente") {
-                    sente.move(currentPlace, komaPlace);
-                    setSente(sente);
-                    setCurrentPlace(null);
-                    setTeban("gote");
-                  } /* teban === "gote" */ else {
-                    gote.move(currentPlace, komaPlace);
-                    setGote(gote);
-                    setCurrentPlace(null);
-                    setTeban("sente");
-                  }
+                  player.move(currentPlace, komaPlace);
+                  setPlayer(player);
+                  setCurrentPlace(null);
+                  setTeban(nextTeban);
                   return;
                 }
                 // 駒が未選択の場合
-                if (teban === "sente") {
-                  const senteKoma = sente.komas.find((koma) =>
-                    samePlace(koma.place, komaPlace)
-                  );
-                  if (senteKoma != null) {
-                    setCurrentPlace(komaPlace);
-                  }
-                } /* teban === "gote" */ else {
-                  const goteKoma = gote.komas.find((koma) =>
-                    samePlace(koma.place, komaPlace)
-                  );
-                  if (goteKoma != null) {
-                    setCurrentPlace(komaPlace);
-                  }
+                const playerKoma = player.komas.find((koma) =>
+                  samePlace(koma.place, komaPlace)
+                );
+                if (playerKoma != null) {
+                  setCurrentPlace(komaPlace);
                 }
               }}
             >
