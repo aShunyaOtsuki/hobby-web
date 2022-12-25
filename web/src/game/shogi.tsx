@@ -120,9 +120,12 @@ export class Gote extends Player {
   }
 }
 
+type Teban = "sente" | "gote";
+
 export const Board = () => {
   const [sente, setSente] = useState(new Sente());
   const [gote, setGote] = useState(new Gote());
+  const [teban, setTeban] = useState<Teban>("sente");
   const [currentPlace, setCurrentPlace] = useState<Place | null>(null);
 
   return (
