@@ -53,6 +53,10 @@ abstract class Player {
       .filter((koma) => !samePlace(koma.place, currentPlace))
       .concat({ komaType: koma.komaType, place: nextPlace });
   }
+
+  findKoma(komaPlace: Place) {
+    return this.komas.find((koma) => samePlace(koma.place, komaPlace));
+  }
 }
 
 const SENTE_INITIAL_KOMA: Koma[] = [
@@ -126,68 +130,51 @@ export const Board = () => {
   const [teban, setTeban] = useState<Teban>("sente");
   const [currentPlace, setCurrentPlace] = useState<Place | null>(null);
 
+  const handleClick = (komaPlace: Place) => {
+    return () => {
+      const player: Player = teban === "sente" ? sente : gote;
+      const setPlayer = teban === "sente" ? setSente : setGote;
+      const nextTeban: Teban = teban === "sente" ? "gote" : "sente";
+      // 駒が選択されていた場合
+      if (currentPlace != null) {
+        player.move(currentPlace, komaPlace);
+        setPlayer(player);
+        setCurrentPlace(null);
+        setTeban(nextTeban);
+        return;
+      }
+      // 駒が未選択の場合
+      const playerKoma = player.findKoma(komaPlace);
+      if (playerKoma != null) {
+        setCurrentPlace(komaPlace);
+      }
+    };
+  };
+
+  const view = () => {
+    return [1, 2, 3, 4, 5].flatMap((i) => {
+      return [1, 2, 3, 4, 5].map((j) => {
+        const komaPlace: Place = [6 - j, i] as any;
+        const komaPlaceKey = komaPlace.toString();
+        return (
+          <div
+            key={komaPlaceKey}
+            className="KomaPlace"
+            onClick={handleClick(komaPlace)}
+          >
+            {`${6 - j}${i}`}
+            <br />
+            <p className="KomaSente">{sente.findKoma(komaPlace)?.komaType}</p>
+            <p className="KomaGote">{gote.findKoma(komaPlace)?.komaType}</p>
+          </div>
+        );
+      });
+    });
+  };
+
   return (
     <div className="ShogiBoard">
-      {[1, 2, 3, 4, 5].flatMap((i) => {
-        return [1, 2, 3, 4, 5].map((j) => {
-          const komaPlace: Place = [6 - j, i] as any;
-          const komaPlaceKey = komaPlace.toString();
-          return (
-            <div
-              key={komaPlaceKey}
-              className="KomaPlace"
-              onClick={() => {
-                // 駒が選択されていた場合
-                if (currentPlace != null) {
-                  if (teban === "sente") {
-                    sente.move(currentPlace, komaPlace);
-                    setSente(sente);
-                    setCurrentPlace(null);
-                    setTeban("gote");
-                  } /* teban === "gote" */ else {
-                    gote.move(currentPlace, komaPlace);
-                    setGote(gote);
-                    setCurrentPlace(null);
-                    setTeban("sente");
-                  }
-                  return;
-                }
-                // 駒が未選択の場合
-                if (teban === "sente") {
-                  const senteKoma = sente.komas.find((koma) =>
-                    samePlace(koma.place, komaPlace)
-                  );
-                  if (senteKoma != null) {
-                    setCurrentPlace(komaPlace);
-                  }
-                } /* teban === "gote" */ else {
-                  const goteKoma = gote.komas.find((koma) =>
-                    samePlace(koma.place, komaPlace)
-                  );
-                  if (goteKoma != null) {
-                    setCurrentPlace(komaPlace);
-                  }
-                }
-              }}
-            >
-              {`${6 - j}${i}`}
-              <br />
-              <p className="KomaSente">
-                {
-                  sente.komas.find((koma) => samePlace(koma.place, komaPlace))
-                    ?.komaType
-                }
-              </p>
-              <p className="KomaGote">
-                {
-                  gote.komas.find((koma) => samePlace(koma.place, komaPlace))
-                    ?.komaType
-                }
-              </p>
-            </div>
-          );
-        });
-      })}
+      {view()}
       <p>teban: {teban}</p>
     </div>
   );
