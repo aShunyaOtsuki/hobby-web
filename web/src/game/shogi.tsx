@@ -2,8 +2,6 @@ import { useState } from "react";
 
 const komaType = ["歩", "銀", "金", "角", "飛", "玉"] as const;
 type KomaType = typeof komaType[number];
-// const placeRange = [1, 2, 3, 4, 5] as const;
-// type PlaceRange = typeof placeRange[number];
 const places = [
   [0, 0], // 持ち駒の場所
   [1, 1],
@@ -147,7 +145,6 @@ export const Board = () => {
                   const goteKoma = gote.komas.find((koma) =>
                     samePlace(koma.place, currentPlace)
                   );
-                  console.log(senteKoma, goteKoma);
                   if (senteKoma != null) {
                     sente.move(currentPlace, komaPlace);
                     setSente(sente);
